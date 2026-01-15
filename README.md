@@ -14,7 +14,7 @@
 ## 🚀 Quick Start (2 minutes)
 
 ```bash
-git clone https://github.com/yourusername/sts-trading-journal.git
+git clone https://github.com/yourusername/Personal-Trading-Journal.git
 cd sts-trading-journal
 pip install -r requirements.txt
 cp config.ini.example config.ini
