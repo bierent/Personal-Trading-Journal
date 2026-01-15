@@ -1,6 +1,6 @@
 # STS Trading Journal 🚀
 
-**Lightning-fast trading journal built by a legend in 2025** – Track, analyze, and master your trades like never before.
+**Lightning-fast trading journal** – Track, analyze, and master your trades like never before.
 
 ## ✨ Features
 
