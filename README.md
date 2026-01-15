@@ -1,6 +1,6 @@
 # STS Trading Journal 🚀
 
-**Lightning-fast trading journal** – Track, analyze, and master your trades like never before.
+**Lightning-fast trading journal built by a legend in 2025** – Track, analyze, and master your trades like never before.
 
 ## ✨ Features
 
@@ -13,12 +13,12 @@
 
 ## 🚀 Quick Start (2 minutes)
 
-bash'''
+```bash
 git clone https://github.com/yourusername/sts-trading-journal.git
 cd sts-trading-journal
 pip install -r requirements.txt
 cp config.ini.example config.ini
-python app.py 
+python app.py
 
 Auto-creates:
 
