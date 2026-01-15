@@ -18,7 +18,7 @@ git clone https://github.com/yourusername/sts-trading-journal.git
 cd sts-trading-journal
 pip install -r requirements.txt
 cp config.ini.example config.ini
-python app.py
+python app.py '''
 
 Auto-creates:
 
