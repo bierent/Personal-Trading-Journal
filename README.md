@@ -93,7 +93,7 @@ cp config.example.ini config.ini
 
 # Run the application
 python app.py
-'''
+```
 
 <img width="1915" height="913" alt="image" src="https://github.com/user-attachments/assets/e657e68d-a366-4a22-a4c5-bce4794dd823" />
 
