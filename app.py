@@ -100,11 +100,11 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 14400
 
 
 
-#limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
-#@limiter.limit("5 per minute") 
+limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
+@limiter.limit("5 per minute") 
 
 @app.route('/login', methods=['GET', 'POST'])
-#@limiter.limit("5 per minute")
+@limiter.limit("5 per minute")
 def login():
     form = LoginForm()
     
