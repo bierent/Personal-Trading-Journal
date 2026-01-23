@@ -63,3 +63,6 @@ pip install -r requirements.txt
 Create feature branch
 Test: python app.py
 PR with description
+
+
+<img width="1915" height="913" alt="image" src="https://github.com/user-attachments/assets/ff78474d-6a46-4006-9777-29d1647ad8fb" />
