@@ -1,90 +1,117 @@
-# STS Trading Journal 🚀
-**Lightning-fast trading journal** – Track, analyze, and master your trades like never before.
-![Trading Journal Banner](https://via.placeholder.com/1200x400/1a1a2e/ffffff?text=STS+Trading+Journal)
-## ✨ Features
-- **Trade Management**: Full CRUD, partial closes with auto-RR calculation, parent/child relationships, Excel import/export
-- **Analytics**: Win rate, RR stats (avg/median/max), Long/Short ratios, HTF/MTF/LTF performance, interactive charts
-- **Journaling**: Daily/Weekly/Monthly entries with calendar view and trade integration
-- **Media**: Multi-image gallery, video support, knowledge base (articles + files)
-- **Productivity**: Todo lists (tickers/tasks), rich notes (pinned/colors), trading rules organizer
-- **Security**: Bcrypt auth, CSRF protection, CSP headers, rate limiting ready
----
-## 🚀 Quick Start (2 minutes)
-```bash
-pip install -r requirements.txt
-cp config.ini.example config.ini
-python app.py
-```
-**Auto-creates:**
-- 📦 SQLite database (`data.db`)
-- 👤 Admin: `admin@admin.com` / `12345678`
-- 🌐 Open: http://127.0.0.1:5000
----
-## 📱 Key Features Demo
-| 💰 Monthly RR Tracking | 📊 Precise Win Rate | ⏱️ Avg Trade Duration |
-|:---:|:---:|:---:|
-| ![Monthly RR](https://via.placeholder.com/300x200/2d3436/ffffff?text=Monthly+RR) | ![Win Rate](https://via.placeholder.com/300x200/2d3436/ffffff?text=Win+Rate) | ![Duration](https://via.placeholder.com/300x200/2d3436/ffffff?text=Duration) |
-| 🏆 Highest RR Trades | 🔥 Most Traded Tickers |
-|:---:|:---:|
-| ![Highest RR](https://via.placeholder.com/300x200/2d3436/ffffff?text=Highest+RR) | ![Tickers](https://via.placeholder.com/300x200/2d3436/ffffff?text=Top+Tickers) |
----
-## 🛠️ Tech Stack
-| Category | Technologies |
-|----------|-------------|
-| **Backend** | Flask + SQLite (WAL mode) + Pandas |
-| **Images** | Pillow (2K auto-compress) |
-| **Security** | Bcrypt + CSRF + CSP headers |
-| **Performance** | 20+ indexes + LRU caching |
-| **Frontend** | Vanilla HTML/CSS/JS |
----
-## 📁 File Structure
-```
-├── app.py              # Main app (all routes)
-├── data.db             # Auto SQLite DB
-├── static/uploads/     # Images/videos
-├── templates/          # HTML templates
-├── config.ini          # Secret key
-└── requirements.txt
-```
----
-## 🔒 Admin Setup
-| Setting | Value |
-|---------|-------|
-| **Login** | `admin@admin.com` / `12345678` |
-| **Settings** | `/settings` (change email/password) |
----
-## 🎯 Production Ready
-✅ 512MB file uploads with validation  
-✅ Image compression (max 2K width)  
-✅ WAL SQLite (production optimized)  
-✅ Security headers (XSS/CSP protection)  
-✅ Pagination + infinite scroll gallery  
-✅ Session security (12hr lifetime)  
----
-## 📊 Screenshots
-<details>
-<summary>Click to expand screenshots</summary>
-### Dashboard
-![Dashboard](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Dashboard+Screenshot)
-### Trade Analytics
-![Analytics](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Analytics+Screenshot)
-### Journal View
-![Journal](https://via.placeholder.com/800x500/1a1a2e/ffffff?text=Journal+Screenshot)
-</details>
----
-## 🤝 Contributing
-1. Fork + clone
-2. `pip install -r requirements.txt`
-3. Create feature branch
-4. Test: `python app.py`
-5. PR with description
----
-## 📄 License
-MIT License - feel free to use for personal or commercial projects.
----
-<p align="center">
-  <b>Made with ❤️ for traders</b><br>
-  ⭐ Star this repo if you find it useful!
-</p>
+STS Trading Journal
+<div align="center">
+Python
+Flask
+SQLite
+License
 
-<img width="1915" height="913" alt="image" src="https://github.com/user-attachments/assets/3b403581-7dab-4c5e-a795-e45c2d80c9d2" />
+A comprehensive, self-hosted trading journal for serious traders
+
+Track trades, analyze performance, and improve your trading strategy
+
+</div>
+📸 Features
+📊 Trade Management
+Futures/Margin Trading - Full support with automatic R:R calculation
+Spot Trading - Track spot positions with percentage gain tracking
+Partial Close Support - Scale out of positions with accurate P&L tracking
+Parent-Child Relationships - Link partial takes to parent trades
+Multi-Timeframe Tagging - Categorize trades as HTF, MTF, or LTF
+📈 Analytics Dashboard
+Win rate & loss rate statistics
+Total, average, and median R:R
+Long/Short ratio analysis
+Performance by trade type
+Average trade duration
+Interactive charts with daily/monthly views
+Period filtering (Today, Week, Month, Year, All-time)
+📅 Trading Journal
+Daily Entries - Document your daily trading thoughts
+Weekly Reviews - Summarize weekly performance
+Monthly Recaps - Track long-term progress
+Calendar View - Visual overview with trade activity indicators
+🖼️ Gallery
+Upload trade screenshots and charts
+Multi-image support per entry
+Search and filter functionality
+Infinite scroll pagination
+📚 Knowledge Base
+Create articles and trading notes
+Category and tag organization
+Support for PDFs, videos, and images
+Full-text search
+📝 Additional Tools
+Sticky Notes - Quick notes with color coding and pin support
+Watchlist - Track tickers of interest
+Todo List - Trading task management
+Trading Rules - Document and reference your trading rules
+🔒 Security
+CSRF protection
+Rate limiting on sensitive endpoints
+Secure session management
+Password hashing with bcrypt
+Security headers (XSS, CSP, etc.)
+🚀 Quick Start
+Prerequisites
+Python 3.8+
+pip
+Installation
+Bash
+
+# Clone the repository
+git clone https://github.com/yourusername/sts-trading-journal.git
+cd sts-trading-journal
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create config file
+cp config.example.ini config.ini
+# Edit config.ini and add your secret key
+
+# Run the application
+python app.py
+Default Login
+Email: admin@admin.com
+Password: 12345678
+⚠️ Important: Change these credentials immediately after first login!
+
+📦 Dependencies
+text
+
+Flask
+Flask-WTF
+Flask-Bcrypt
+Flask-Limiter
+Werkzeug
+pandas
+openpyxl
+Pillow
+📁 Project Structure
+text
+
+sts-trading-journal/
+├── app.py                 # Main application
+├── config.ini             # Configuration file
+├── data10.db              # SQLite database
+├── static/
+│   ├── uploads/           # User uploads
+│   │   └── knowledge/     # Knowledge base files
+│   └── css/               # Stylesheets
+├── templates/             # Jinja2 templates
+│   ├── index.html         # Main trades view
+│   ├── spot.html          # Spot trades
+│   ├── journal.html       # Calendar view
+│   ├── daily_journal.html # Daily entry view
+│   ├── analytics.html     # Analytics dashboard
+│   ├── gallery.html       # Image gallery
+│   ├── knowledge.html     # Knowledge base
+│   ├── notes.html         # Sticky notes
+│   ├── todo.html          # Watchlist & todos
+│   ├── rules.html         # Trading rules
+│   └── settings.html      # User settings
+└── app.log                # Application logs
