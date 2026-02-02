@@ -2250,6 +2250,155 @@ def partial_close_inline(parent_id):
     return redirect(url_for('index'))
 
 
+
+@app.route('/partial_close_inline_spot/<int:parent_id>', methods=['POST'])
+@login_required
+def partial_close_inline_spot(parent_id):
+    with get_db() as conn:
+        parent_trade = conn.execute('SELECT * FROM spot_trades WHERE id=?', (parent_id,)).fetchone()
+        if parent_trade is None:
+            flash('Parent spot trade not found', 'error')
+            return redirect(url_for('spot'))
+
+        risk = request.form.get('risk')
+        status = request.form.get('status', '').upper()
+        risk = float(risk) if risk else None
+
+        reason = request.form.get('reason', '')
+        feedback = request.form.get('feedback', '')
+
+        if status not in ('OPEN', 'CLOSED'):
+            flash('Invalid status', 'error')
+            return redirect(url_for('spot'))
+
+        if risk is None or risk <= 0:
+            flash('Risk must be provided and > 0', 'error')
+            return redirect(url_for('spot'))
+
+        if status == 'OPEN':
+            open_price = request.form.get('open_price')
+            open_time = request.form.get('open_time')
+            open_price = float(open_price) if open_price else None
+            close_price = None
+            close_time = None
+
+            if open_price is None:
+                flash('Open price is required for OPEN partial', 'error')
+                return redirect(url_for('spot'))
+
+            pct_gain = None
+            new_parent_risk = (parent_trade['risk'] if parent_trade['risk'] is not None else 0.0) + risk
+            new_parent_status = parent_trade['status']
+            parent_close_time = parent_trade['close_time']
+
+        else:  # CLOSED
+            close_price = request.form.get('close_price')
+            close_time = request.form.get('close_time')
+            close_price = float(close_price) if close_price else None
+            open_price = parent_trade['open_price']
+            open_time = None
+
+            if close_price is None:
+                flash('Close price is required for CLOSED partial', 'error')
+                return redirect(url_for('spot'))
+
+            # Calculate % gain for spot
+            if open_price and open_price != 0:
+                pct_gain = round(((close_price - open_price) / open_price) * 100, 2)
+            else:
+                pct_gain = 0.0
+
+            old_parent_risk = parent_trade['risk'] if parent_trade['risk'] is not None else 0.0
+            new_parent_risk = old_parent_risk - risk
+
+            if new_parent_risk <= 0:
+                new_parent_status = 'CLOSED'
+                parent_close_time = parent_trade['close_time'] or datetime.now().strftime('%Y-%m-%d %H:%M')
+            else:
+                new_parent_status = parent_trade['status']
+                parent_close_time = parent_trade['close_time']
+
+        # Insert partial trade
+        conn.execute('''
+            INSERT INTO spot_trades (
+                symbol, open_time, close_time, status,
+                open_price, close_price, risk, SL, TP, Gain,
+                reason, feedback, parent_id
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            parent_trade['symbol'],
+            open_time,
+            close_time,
+            status,
+            open_price,
+            close_price,
+            risk,
+            parent_trade['SL'],
+            parent_trade['TP'],
+            pct_gain,
+            reason,
+            feedback,
+            parent_id
+        ))
+
+        # Update parent trade
+        if status == 'CLOSED' and new_parent_risk <= 0:
+            conn.execute('''
+                UPDATE spot_trades
+                SET risk = ?, status = ?, close_time = ?
+                WHERE id = ?
+            ''', (
+                max(0.0, new_parent_risk),
+                new_parent_status,
+                parent_close_time,
+                parent_id
+            ))
+        else:
+            conn.execute('''
+                UPDATE spot_trades
+                SET risk = ?, status = ?
+                WHERE id = ?
+            ''', (
+                new_parent_risk,
+                new_parent_status,
+                parent_id
+            ))
+
+        # Recalculate parent % gain (weighted average)
+        updated_parent = conn.execute('SELECT * FROM spot_trades WHERE id=?', (parent_id,)).fetchone()
+        all_partials = conn.execute('SELECT * FROM spot_trades WHERE parent_id=?', (parent_id,)).fetchall()
+
+        # Calculate weighted average % gain
+        total_realized_gain_pct = 0.0
+        total_risk_closed = 0.0
+        
+        for partial in all_partials:
+            if partial['status'] == 'CLOSED' and partial['close_price'] is not None and partial['risk'] is not None:
+                open_p = partial['open_price'] or updated_parent['open_price']
+                if open_p and open_p != 0:
+                    pct_gain = ((partial['close_price'] - open_p) / open_p) * 100
+                    total_realized_gain_pct += pct_gain * partial['risk']
+                    total_risk_closed += partial['risk']
+        
+        parent_risk = updated_parent['risk'] if updated_parent['risk'] is not None else 0.0
+        if updated_parent['status'] == 'CLOSED' and updated_parent['close_price'] is not None and parent_risk > 0:
+            if updated_parent['open_price'] and updated_parent['open_price'] != 0:
+                pct_gain = ((updated_parent['close_price'] - updated_parent['open_price']) / updated_parent['open_price']) * 100
+                total_realized_gain_pct += pct_gain * parent_risk
+                total_risk_closed += parent_risk
+        
+        if total_risk_closed > 0:
+            parent_pct_gain = round(total_realized_gain_pct / total_risk_closed, 2)
+        else:
+            parent_pct_gain = None
+
+        conn.execute('UPDATE spot_trades SET Gain=? WHERE id=?', (parent_pct_gain, parent_id))
+        conn.commit()
+
+    flash('Spot partial trade added!', 'success')
+    return redirect(url_for('spot'))
+
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def user_detail(user_id):
